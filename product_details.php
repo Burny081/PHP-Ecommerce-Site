@@ -17,7 +17,7 @@ if (!$product) {
     exit;
 }
 
-// Fetch related products (same category, excluding current product)
+
 $related_stmt = $pdo->prepare("SELECT * FROM products WHERE category_id = ? AND id != ? LIMIT 3");
 $related_stmt->execute([$product['category_id'], $product_id]);
 $related_products = $related_stmt->fetchAll();

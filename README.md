@@ -136,7 +136,7 @@ ecommerce/
 > You can add screenshots here by uploading images to the GitHub repository and referencing them using markdown like:
 
 ```markdown
-![Homepage](screenshots/homepage.png)
+![Homepage](screenshots/1.png)
 ```
 
 ---

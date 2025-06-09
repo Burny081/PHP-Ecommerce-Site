@@ -35,7 +35,8 @@ CREATE TABLE cart (
 
 -- to add users or admin 
 INSERT INTO users (username, password, role) VALUES ('admin', '$2y$10$Q5J2kW5z5Y5c5K5x5W5y5u5Q5J2kW5z5Y5c5K5x5W5y5u5', 'admin'); 
--- Password: admin123 and an example bcrypt hash is given in the query for better security , used bcrypt hash for practice as I am working on some projects utilizing bcrypt hash
+-- Password: admin123 
+-- Do change hash of the password when adding users correctly
 
 INSERT INTO users (username, password, role) VALUES ('user', '$2y$10$Q5J2kW5z5Y5c5K5x5W5y5u5Q5J2kW5z5Y5c5K5x5W5y5u5', 'user'); -- Password: user123
 

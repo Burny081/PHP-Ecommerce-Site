@@ -1,0 +1,6 @@
+# Ignore the uploads folder
+uploads/
+
+# Ignore sensitive configuration files (optional, if you have any)
+config.php
+

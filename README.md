@@ -75,10 +75,6 @@ $database = "ecommerce";
   * For WAMP: `www/`
 * Ensure the `uploads/` folder is **writable**:
 
-  ```bash
-  chmod 777 uploads
-  ```
-
 ---
 
 ## 🌐 Access the Website
@@ -113,11 +109,11 @@ ecommerce/
 ├── config.sample.php        # Sample config file
 ├── login.php                # Login form for users/admins
 ├── index.php                # Homepage (redirects to login/products)
-├── products.php             # Product listing
-├── product_details.php      # Individual product view
-├── cart.php                 # Handles adding to cart
-├── view_cart.php            # Displays cart contents
-├── logout.php               # Logout functionality
+├── products.php             # Products
+├── product_details.php      # Individual product view with details
+├── cart.php                 # Handles adding to cart functionality
+├── view_cart.php            # Displays cart items
+├── logout.php               # Logout 
 │
 ├── /admin                   # Admin panel
 │   ├── index.php            # Dashboard
@@ -133,11 +129,20 @@ ecommerce/
 
 ## 📷 Screenshots
 
-> You can add screenshots here by uploading images to the GitHub repository and referencing them using markdown like:
 
-```markdown
+## Homepage
 ![Homepage](screenshots/1.png)
-```
+## Products page
+![Homepage](screenshots/2.png)
+## Cart page
+![Homepage](screenshots/3.png)
+
+## Admin Page
+![Homepage](screenshots/4.png)
+
+![Homepage](screenshots/5.png)
+
+![Homepage](screenshots/6.png)
 
 ---
 

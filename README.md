@@ -1,9 +1,7 @@
 
----
+# 🛒 Ecommerce Web Application
 
-# 🛒 Ecommerce Website Project
-
-This is a simple **Ecommerce Web Application** developed using **PHP** and **MySQL** as part of a Web Development class assignment. It includes both **user** and **admin** functionalities such as product listings, detailed views, shopping cart management, and product/category administration.
+A fully functional **Ecommerce Website** built using **PHP** and **MySQL**, featuring a clean separation between **user** and **admin** operations. It includes dynamic product listings, detailed product views, shopping cart management, and a robust admin interface for product and category management.
 
 ---
 
@@ -13,16 +11,16 @@ This is a simple **Ecommerce Web Application** developed using **PHP** and **MyS
 
 * User Login / Logout
 * Browse products by category
-* View product details
+* View detailed product pages
 * Add products to cart
-* View cart and its contents
+* View and manage cart contents
 
 ### 🛠️ Admin Side
 
 * Admin Login / Logout
-* Add new products
+* Add new products with images
 * Edit or delete existing products
-* Add or delete product categories
+* Create and manage product categories
 
 ---
 
@@ -30,8 +28,8 @@ This is a simple **Ecommerce Web Application** developed using **PHP** and **MyS
 
 * PHP 7.4 or higher
 * MySQL
-* A Web Server (e.g., Apache via [XAMPP](https://www.apachefriends.org/) or [WAMP](http://www.wampserver.com/))
-* Git (for cloning the repository)
+* A local web server (e.g., [XAMPP](https://www.apachefriends.org/) or [WAMP](http://www.wampserver.com/))
+* Git (optional, for cloning the repo)
 
 ---
 
@@ -40,25 +38,21 @@ This is a simple **Ecommerce Web Application** developed using **PHP** and **MyS
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd ecommerce
+git clone https://github.com/MR-1124/PHP---Ecommerce-Learning-Project/
+cd PHP---Ecommerce-Learning-Project
 ```
 
-### 2️⃣ Set Up the Database
+### 2️⃣ Configure the Database
 
-* Create a MySQL database named `ecommerce`.
-* Import the provided SQL file:
+1. Create a new MySQL database named `ecommerce`.
+2. Import the provided SQL dump in XAMPP:
 
-```bash
-mysql -u your_username -p ecommerce < database.sql
-```
+This will create the required tables and insert initial sample data.
 
-This will create the necessary tables and insert sample data.
+### 3️⃣ Set Up Configuration
 
-### 3️⃣ Configure Database Connection
-
-* Rename `config.sample.php` to `config.php`.
-* Open `config.php` and update the database credentials:
+1. Rename `config.sample.php` to `config.php`.
+2. Open `config.php` and update the following values:
 
 ```php
 $servername = "localhost";
@@ -67,36 +61,35 @@ $password = "your_mysql_password";
 $database = "ecommerce";
 ```
 
-### 4️⃣ Set Up Web Server
+### 4️⃣ Set Up the Web Server
 
-* Place the `ecommerce/` folder inside your web server's root directory:
+* Place the entire `PHP---Ecommerce-Learning-Project/` folder in your server's root directory:
 
   * For XAMPP: `htdocs/`
-  * For WAMP: `www/`
-* Ensure the `uploads/` folder is **writable**:
+* Ensure the `uploads/` folder has **write permissions** (for product image uploads).
 
 ---
 
-## 🌐 Access the Website
+## 🌐 Accessing the Application
 
-1. Start your web server and MySQL.
-2. Visit in your browser:
+1. Start your Apache and MySQL server.
+2. Open your browser and visit:
 
-   ```
-   http://localhost/ecommerce/
-   ```
+```
+http://localhost/PHP---Ecommerce-Learning-Project/
+```
 
 ### 🔐 Demo Credentials
 
-**User Login**
+#### 👥 User
 
-* Username: `user`
-* Password: `user123`
+* **Username:** `user`
+* **Password:** `user123`
 
-**Admin Login**
+#### 🛠️ Admin
 
-* Username: `admin`
-* Password: `admin123`
+* **Username:** `admin`
+* **Password:** `admin123`
 
 ---
 
@@ -105,44 +98,49 @@ $database = "ecommerce";
 ```
 ecommerce/
 │
-├── config.php               # Database connection (excluded from Git)
-├── config.sample.php        # Sample config file
-├── login.php                # Login form for users/admins
-├── index.php                # Homepage (redirects to login/products)
-├── products.php             # Products
-├── product_details.php      # Individual product view with details
-├── cart.php                 # Handles adding to cart functionality
-├── view_cart.php            # Displays cart items
-├── logout.php               # Logout 
+├── config.php               # Database configuration (excluded from Git)
+├── config.sample.php        # Sample config for setup
+├── login.php                # Unified login for users and admins
+├── index.php                # Entry point (redirects to login or products)
+├── products.php             # Displays all products
+├── product_details.php      # Single product details page
+├── cart.php                 # Add-to-cart handler
+├── view_cart.php            # Cart content display
+├── logout.php               # User/Admin logout
 │
-├── /admin                   # Admin panel
-│   ├── index.php            # Dashboard
-│   ├── add_product.php      # Add new product
-│   ├── manage_products.php  # Edit/Delete products
-│   └── add_category.php     # Manage categories
+├── /admin                   # Admin dashboard and management tools
+│   ├── index.php            # Admin dashboard
+│   ├── add_product.php      # Product creation
+│   ├── manage_products.php  # Update or delete products
+│   └── add_category.php     # Add/delete categories
 │
-├── /uploads                 # Product images (excluded from Git)
-└── database.sql             # SQL dump for schema and sample data
+├── /uploads                 # Uploaded product images (excluded from Git)
+└── database.sql             # SQL schema and seed data
 ```
 
 ---
 
 ## 📷 Screenshots
 
+### 🏠 Homepage
 
-## Homepage
 ![Homepage](screenshots/1.png)
-## Products page
-![Homepage](screenshots/2.png)
-## Cart page
-![Homepage](screenshots/3.png)
 
-## Admin Page
-![Homepage](screenshots/4.png)
+### 🛍️ Products Page
 
-![Homepage](screenshots/5.png)
+![Products](screenshots/2.png)
 
-![Homepage](screenshots/6.png)
+### 🛒 Cart Page
+
+![Cart](screenshots/3.png)
+
+### 🔧 Admin Dashboard
+
+![Admin Dashboard](screenshots/4.png)
+
+![Add Product](screenshots/5.png)
+
+![Manage Products](screenshots/6.png)
 
 ---
 
@@ -152,10 +150,9 @@ ecommerce/
 
 ---
 
-## 🗓️ Submission Date
+## 🗓️ Project Completion Date
 
 **June 09, 2025**
 
----
 
 

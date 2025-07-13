@@ -93,33 +93,6 @@ http://localhost/PHP---Ecommerce-Learning-Project/
 
 ---
 
-## 🗂️ Project Structure
-
-```
-ecommerce/
-│
-├── config.php               # Database configuration (excluded from Git)
-├── config.sample.php        # Sample config for setup
-├── login.php                # Unified login for users and admins
-├── index.php                # Entry point (redirects to login or products)
-├── products.php             # Displays all products
-├── product_details.php      # Single product details page
-├── cart.php                 # Add-to-cart handler
-├── view_cart.php            # Cart content display
-├── logout.php               # User/Admin logout
-│
-├── /admin                   # Admin dashboard and management tools
-│   ├── index.php            # Admin dashboard
-│   ├── add_product.php      # Product creation
-│   ├── manage_products.php  # Update or delete products
-│   └── add_category.php     # Add/delete categories
-│
-├── /uploads                 # Uploaded product images (excluded from Git)
-└── database.sql             # SQL schema and seed data
-```
-
----
-
 ## 📷 Screenshots
 
 ### 🏠 Homepage

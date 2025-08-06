@@ -1,6 +1,11 @@
 <?php
 session_start();
+
 require_once 'config.php';
+if (!isset($pdo)) {
+    $pdo = new PDO('mysql:host=localhost;dbname=ecommerce;charset=utf8', 'root', 'Nestor667');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
     header("Location: login.php");
@@ -27,7 +32,7 @@ $related_products = $related_stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - Mera-Shop</title>
+    <title>Product Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -91,7 +96,7 @@ $related_products = $related_stmt->fetchAll();
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Mera-Shop</a>
+            <a class="navbar-brand" href="#">Comparable</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -123,7 +128,13 @@ $related_products = $related_stmt->fetchAll();
                     <p><i class="fas fa-info-circle me-2"></i><strong>Description:</strong> <?= htmlspecialchars($product['description']) ?></p>
                     <p><i class="fas fa-dollar-sign me-2"></i><strong>Price:</strong> Fcfa <?= $product['price'] ?></p>
                     <p><i class="fas fa-tags me-2"></i><strong>Offer:</strong> Fcfa <?= $product['offer'] ?></p>
-                    <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
+                    <form method="get" action="cart.php" class="d-flex align-items-center">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                        <label for="quantity" class="me-2 mb-0"><strong>Quantity:</strong></label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;">
+                        <button type="submit" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</button>
+                    </form>
                 </div>
             </div>
         </div>

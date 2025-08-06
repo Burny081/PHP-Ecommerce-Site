@@ -1,6 +1,11 @@
 <?php
 session_start();
+
 require_once 'config.php';
+if (!isset($pdo)) {
+    $pdo = new PDO('mysql:host=localhost;dbname=ecommerce;charset=utf8', 'root', 'Nestor667');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
     header("Location: login.php");

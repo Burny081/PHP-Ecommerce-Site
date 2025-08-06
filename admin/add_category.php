@@ -137,6 +137,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
             <footer class="text-center">
                 <div class="container">
                     <p>&copy; Nestor. All Rights Reserved.</p>
+                    <P><b>contact +237 690640554</b></P>
+            <p><b><u>help email: bongnitambe@gmail.com</u></b></p>
                 </div>
             </footer>
         </div>

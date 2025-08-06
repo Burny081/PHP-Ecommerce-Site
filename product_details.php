@@ -158,7 +158,9 @@ $related_products = $related_stmt->fetchAll();
     </div>
     <footer class="text-center">
         <div class="container">
-            <p>&copy; 2025 Mera-Shop. All Rights Reserved.</p>
+            <p>&copy; Nestor. All Rights Reserved.</p>
+            <P><b>contact +237 690640554</b></P>
+            <p><b><u>help email: bongnitambe@gmail.com</u></b></p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

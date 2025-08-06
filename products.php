@@ -38,6 +38,26 @@ $products = $stmt->fetchAll();
         body {
             font-family: 'Poppins', sans-serif;
             background: #f8f9fa;
+            overflow-x: hidden;
+        }
+        .bg-anim {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.45;
+            filter: blur(40px);
+            mix-blend-mode: lighten;
+            animation: floatBlob 18s infinite linear;
+        }
+        @keyframes floatBlob {
+            0%   { transform: translateY(0) scale(1); }
+            50%  { transform: translateY(-60px) scale(1.1); }
+            100% { transform: translateY(0) scale(1); }
         }
         .navbar {
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -57,11 +77,16 @@ $products = $stmt->fetchAll();
             border: none;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
+            will-change: transform;
+            perspective: 600px;
         }
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+        }
+        .product-card:active {
+            transform: scale(0.98);
         }
         .product-image {
             height: 200px;
@@ -93,6 +118,11 @@ $products = $stmt->fetchAll();
     </style>
 </head>
 <body>
+    <div class="bg-anim">
+        <div class="blob" style="width: 400px; height: 400px; background: radial-gradient(circle at 30% 30%, #007bff 60%, transparent 100%); left: -120px; top: -100px; animation-delay: 0s;"></div>
+        <div class="blob" style="width: 350px; height: 350px; background: radial-gradient(circle at 70% 70%, #00c3ff 60%, transparent 100%); right: -100px; top: 120px; animation-delay: 3s;"></div>
+        <div class="blob" style="width: 300px; height: 300px; background: radial-gradient(circle at 50% 50%, #ff6ec4 60%, transparent 100%); left: 50vw; bottom: -120px; animation-delay: 6s;"></div>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Comparable</a>
@@ -111,7 +141,7 @@ $products = $stmt->fetchAll();
             </div>
         </div>
     </nav>
-    <div class="container mt-5">
+    <div class="container mt-5" style="position: relative; z-index: 1;">
         <h2 class="mb-4">Our Products</h2>
         <div class="mb-4">
             <label for="category" class="form-label"><i class="fas fa-filter me-2"></i>Filter by Category</label>
@@ -150,5 +180,44 @@ $products = $stmt->fetchAll();
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Animate blobs horizontally for more dynamic background
+    document.querySelectorAll('.blob').forEach(function(blob, i) {
+        const base = i % 2 === 0 ? -120 : window.innerWidth - 100;
+        const dir = i % 2 === 0 ? 1 : -1;
+        setInterval(() => {
+            const t = Date.now() / 4000 + i * 1.5;
+            const x = base + Math.sin(t) * 80 * dir;
+            blob.style.left = dir === 1 ? `${x}px` : '';
+            blob.style.right = dir === -1 ? `${window.innerWidth - x - blob.offsetWidth}px` : '';
+        }, 60);
+    });
+    </script>
+    <script>
+    // Mouse sensor animation for product cards
+    document.querySelectorAll('.product-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * 8; // tilt up/down
+            const rotateY = ((x - centerX) / centerX) * -8; // tilt left/right
+            card.style.transform = `translateY(-5px) scale(1.03) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.style.boxShadow = '0 16px 32px rgba(0,0,0,0.18)';
+        });
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = '';
+            card.style.boxShadow = '';
+        });
+        card.addEventListener('mousedown', function() {
+            card.style.transform += ' scale(0.98)';
+        });
+        card.addEventListener('mouseup', function() {
+            card.style.transform = card.style.transform.replace(' scale(0.98)', '');
+        });
+    });
+    </script>
 </body>
 </html>

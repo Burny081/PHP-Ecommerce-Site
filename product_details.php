@@ -121,8 +121,8 @@ $related_products = $related_stmt->fetchAll();
                     <h3><?= htmlspecialchars($product['title']) ?></h3>
                     <p class="text-muted"><i class="fas fa-tag me-2"></i><strong>Category:</strong> <?= htmlspecialchars($product['category_name']) ?></p>
                     <p><i class="fas fa-info-circle me-2"></i><strong>Description:</strong> <?= htmlspecialchars($product['description']) ?></p>
-                    <p><i class="fas fa-dollar-sign me-2"></i><strong>Price:</strong> ₹<?= $product['price'] ?></p>
-                    <p><i class="fas fa-tags me-2"></i><strong>Offer:</strong> ₹<?= $product['offer'] ?></p>
+                    <p><i class="fas fa-dollar-sign me-2"></i><strong>Price:</strong> Fcfa <?= $product['price'] ?></p>
+                    <p><i class="fas fa-tags me-2"></i><strong>Offer:</strong> Fcfa <?= $product['offer'] ?></p>
                     <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
                 </div>
             </div>
@@ -136,7 +136,7 @@ $related_products = $related_stmt->fetchAll();
                             <img src="<?= htmlspecialchars($related['image']) ?>" class="card-img-top related-image" alt="<?= htmlspecialchars($related['title']) ?>">
                             <div class="card-body">
                                 <h6 class="card-title"><?= htmlspecialchars($related['title']) ?></h6>
-                                <p class="card-text text-muted">Offer: ₹<?= $related['offer'] ?></p>
+                                <p class="card-text text-muted">Offer: Fcfa <?= $related['offer'] ?></p>
                                 <a href="product_details.php?id=<?= $related['id'] ?>" class="btn btn-primary btn-sm"><i class="fas fa-eye me-2"></i>View</a>
                             </div>
                         </div>

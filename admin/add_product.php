@@ -127,11 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <textarea class="form-control" id="description" name="description" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="price" class="form-label"><i class="fas fa-dollar-sign me-2"></i>Price</label>
+                            <label for="price" class="form-label"><i class="fas fa-dollar-sign me-2"></i>Price (Fcfa)</label>
                             <input type="number" step="0.01" class="form-control" id="price" name="price" required>
                         </div>
                         <div class="mb-3">
-                            <label for="offer" class="form-label"><i class="fas fa-tags me-2"></i>Offer Price</label>
+                            <label for="offer" class="form-label"><i class="fas fa-tags me-2"></i>Offer Price (Fcfa)</label>
                             <input type="number" step="0.01" class="form-control" id="offer" name="offer" required>
                         </div>
                         <div class="mb-3">

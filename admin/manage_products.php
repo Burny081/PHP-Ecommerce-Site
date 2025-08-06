@@ -152,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <td><img src="../<?= htmlspecialchars($product['image']) ?>" class="product-image" alt="<?= htmlspecialchars($product['title']) ?>"></td>
                                 <td><?= htmlspecialchars($product['title']) ?></td>
                                 <td><?= htmlspecialchars($product['description']) ?></td>
-                                <td>₹<?= $product['price'] ?></td>
-                                <td>₹<?= $product['offer'] ?></td>
+                                <td>Fcfa <?= $product['price'] ?></td>
+                                <td>Fcfa <?= $product['offer'] ?></td>
                                 <td><?= htmlspecialchars($product['category_name']) ?></td>
                                 <td>
                                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $product['id'] ?>"><i class="fas fa-edit me-2"></i>Edit</button>
@@ -179,11 +179,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <textarea class="form-control" name="description" required><?= htmlspecialchars($product['description']) ?></textarea>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="price" class="form-label">Price</label>
+                                                    <label for="price" class="form-label">Price (Fcfa)</label>
                                                     <input type="number" step="0.01" class="form-control" name="price" value="<?= $product['price'] ?>" required>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label for="offer" class="form-label">Offer Price</label>
+                                                    <label for="offer" class="form-label">Offer Price (Fcfa)</label>
                                                     <input type="number" step="0.01" class="form-control" name="offer" value="<?= $product['offer'] ?>" required>
                                                 </div>
                                                 <div class="mb-3">

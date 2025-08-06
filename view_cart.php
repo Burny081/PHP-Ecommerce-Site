@@ -30,7 +30,7 @@ foreach ($cart_items as $item) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Cart - Mera-Shop</title>
+    <title>View Cart - Comparable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -85,7 +85,7 @@ foreach ($cart_items as $item) {
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Mera-Shop</a>
+            <a class="navbar-brand" href="#">Comparable</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -123,10 +123,10 @@ foreach ($cart_items as $item) {
                         <tr>
                             <td><img src="<?= htmlspecialchars($item['image']) ?>" class="cart-image" alt="<?= htmlspecialchars($item['title']) ?>"></td>
                             <td><?= htmlspecialchars($item['title']) ?></td>
-                            <td>$<?= $item['price'] ?></td>
-                            <td>$<?= $item['offer'] ?></td>
+                            <td>Fcfa <?= $item['price'] ?></td>
+                            <td>Fcfa <?= $item['offer'] ?></td>
                             <td><?= $item['quantity'] ?></td>
-                            <td>$<?= $item['offer'] * $item['quantity'] ?></td>
+                            <td>Fcfa <?= $item['offer'] * $item['quantity'] ?></td>
                             <td>
                                 <a href="view_cart.php?action=remove&cart_id=<?= $item['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt me-2"></i>Remove</a>
                             </td>
@@ -135,14 +135,14 @@ foreach ($cart_items as $item) {
                 </tbody>
             </table>
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <h4>Total: ₹<?= $total ?></h4>
+                <h4>Total: Fcfa<?= $total ?></h4>
                 <a href="#" class="btn btn-success"><i class="fas fa-check me-2"></i>Proceed to Checkout</a>
             </div>
         <?php endif; ?>
     </div>
     <footer class="text-center">
         <div class="container">
-            <p>&copy; 2025 Mera-Shop. All Rights Reserved.</p>
+            <p>&copy; Nestor. All Rights Reserved.</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

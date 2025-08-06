@@ -126,7 +126,7 @@ $products = $stmt->fetchAll();
                         <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top product-image" alt="<?= htmlspecialchars($product['title']) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($product['title']) ?></h5>
-                            <p class="card-text text-muted">Price: ₹<?= $product['price'] ?> <br>Offer: ₹<?= $product['offer'] ?></p>
+                            <p class="card-text text-muted">Price: Fcfa <?= $product['price'] ?> <br>Offer: Fcfa <?= $product['offer'] ?></p>
                             <div class="d-flex justify-content-between">
                                 <a href="product_details.php?id=<?= $product['id'] ?>" class="btn btn-primary"><i class="fas fa-eye me-2"></i>View Details</a>
                                 <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
@@ -139,7 +139,7 @@ $products = $stmt->fetchAll();
     </div>
     <footer class="text-center">
         <div class="container">
-            <p>&copy; 2025 Mera-Shop. All Rights Reserved.</p>
+            <p>&copy; Nestor. All Rights Reserved.</p>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

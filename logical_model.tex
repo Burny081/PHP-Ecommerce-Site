@@ -1,0 +1,57 @@
+% Modèle logique de données - E-commerce Comparable
+
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows.meta}
+\geometry{margin=2cm}
+\title{Modèle logique de données\newline\large E-commerce Comparable}
+\author{Nestor}
+\date{Août 2025}
+
+\begin{document}
+\maketitle
+
+\section*{Diagramme logique}
+
+\begin{center}
+\begin{tikzpicture}[
+  entity/.style={rectangle, draw, rounded corners, fill=blue!10, minimum width=3.5cm, minimum height=1.2cm},
+  rel/.style={->, thick},
+  node distance=2.5cm and 4cm
+]
+% Entities
+\node[entity] (users) {\textbf{users}\newline id (PK)\newline name\newline email\newline password\newline role\newline created\_at};
+\node[entity, below=of users] (orders) {\textbf{orders}\newline id (PK)\newline user\_id (FK)\newline total\_price\newline status\newline created\_at};
+\node[entity, right=of users] (categories) {\textbf{categories}\newline id (PK)\newline name};
+\node[entity, below=of categories] (products) {\textbf{products}\newline id (PK)\newline title\newline description\newline price\newline offer\newline category\_id (FK)\newline image\newline status\newline created\_at};
+\node[entity, below=of orders] (order_items) {\textbf{order\_items}\newline id (PK)\newline order\_id (FK)\newline product\_id (FK)\newline quantity\newline price};
+% Relations
+\draw[rel] (users) -- node[right]{places} (orders);
+\draw[rel] (orders) -- node[right]{contains} (order_items);
+\draw[rel] (products) -- node[left]{is in} (order_items);
+\draw[rel] (categories) -- node[right]{has} (products);
+\end{tikzpicture}
+\end{center}
+
+\section*{Détail des tables}
+\begin{itemize}
+  \item \textbf{users} : id (PK), name, email, password, role, created\_at
+  \item \textbf{products} : id (PK), title, description, price, offer, category\_id (FK), image, status, created\_at
+  \item \textbf{categories} : id (PK), name
+  \item \textbf{orders} : id (PK), user\_id (FK), total\_price, status, created\_at
+  \item \textbf{order\_items} : id (PK), order\_id (FK), product\_id (FK), quantity, price
+\end{itemize}
+
+\section*{Contraintes et relations}
+\begin{itemize}
+  \item Un utilisateur peut passer plusieurs commandes.
+  \item Une commande contient plusieurs articles.
+  \item Un article de commande référence un produit.
+  \item Un produit appartient à une catégorie.
+\end{itemize}
+
+\end{document}

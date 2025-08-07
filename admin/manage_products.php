@@ -24,7 +24,15 @@ if (isset($_GET['action']) && ($_GET['action'] == 'out_of_stock' || $_GET['actio
     exit;
 }
 
-$products = $pdo->query("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id")->fetchAll();
+
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+if ($search !== '') {
+    $stmt = $pdo->prepare("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.title LIKE ?");
+    $stmt->execute(['%' . $search . '%']);
+    $products = $stmt->fetchAll();
+} else {
+    $products = $pdo->query("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id")->fetchAll();
+}
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete') {
     $id = $_GET['id'];
@@ -146,7 +154,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="flex-grow-1">
             <div class="content">
-                <h2 class="mb-4">Manage Products</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Manage Products</h2>
+                    <form class="d-flex" method="get" action="manage_products.php">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search by title..." value="<?= htmlspecialchars($search ?? '') ?>" style="max-width: 250px;">
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>

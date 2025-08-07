@@ -96,7 +96,10 @@ $related_products = $related_stmt->fetchAll();
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">Comparable</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                <img src="img/logo.jpg" alt="Logo" style="height:100px;width:100px;object-fit:contain;">
+                Comparable
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

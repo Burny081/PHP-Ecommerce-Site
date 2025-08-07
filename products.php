@@ -13,14 +13,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
 }
 
 $categories = $pdo->query("SELECT * FROM categories")->fetchAll();
+// Search and filter logic
 $selected_category = isset($_GET['category_id']) ? $_GET['category_id'] : null;
-$products_query = $selected_category ? 
-    "SELECT * FROM products WHERE category_id = ?" : 
-    "SELECT * FROM products";
-$stmt = $pdo->prepare($products_query);
-if ($selected_category) {
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+if ($selected_category && $search) {
+    $products_query = "SELECT * FROM products WHERE category_id = ? AND (title LIKE ? OR description LIKE ?)";
+    $stmt = $pdo->prepare($products_query);
+    $stmt->execute([$selected_category, "%$search%", "%$search%"]);
+} elseif ($selected_category) {
+    $products_query = "SELECT * FROM products WHERE category_id = ?";
+    $stmt = $pdo->prepare($products_query);
     $stmt->execute([$selected_category]);
+} elseif ($search) {
+    $products_query = "SELECT * FROM products WHERE title LIKE ? OR description LIKE ?";
+    $stmt = $pdo->prepare($products_query);
+    $stmt->execute(["%$search%", "%$search%"]);
 } else {
+    $products_query = "SELECT * FROM products";
+    $stmt = $pdo->prepare($products_query);
     $stmt->execute();
 }
 $products = $stmt->fetchAll();
@@ -143,16 +153,25 @@ $products = $stmt->fetchAll();
     </nav>
     <div class="container mt-5" style="position: relative; z-index: 1;">
         <h2 class="mb-4">Our Products</h2>
-        <div class="mb-4">
-            <label for="category" class="form-label"><i class="fas fa-filter me-2"></i>Filter by Category</label>
-            <select onchange="location = this.value;" class="form-select w-25" id="category">
-                <option value="products.php">All Categories</option>
-                <?php foreach ($categories as $category): ?>
-                    <option value="products.php?category_id=<?= $category['id'] ?>" <?= $selected_category == $category['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($category['name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="mb-4 d-flex align-items-end gap-3">
+            <div>
+                <label for="category" class="form-label"><i class="fas fa-filter me-2"></i>Filter by Category</label>
+                <select onchange="location = this.value;" class="form-select w-100" id="category" style="min-width:180px;">
+                    <option value="products.php">All Categories</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="products.php?category_id=<?= $category['id'] ?><?= $search ? '&search=' . urlencode($search) : '' ?>" <?= $selected_category == $category['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($category['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <form method="get" class="flex-grow-1 d-flex gap-2">
+                <?php if ($selected_category): ?>
+                    <input type="hidden" name="category_id" value="<?= htmlspecialchars($selected_category) ?>">
+                <?php endif; ?>
+                <input type="text" name="search" class="form-control" placeholder="Search products..." value="<?= htmlspecialchars($search) ?>">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+            </form>
         </div>
         <div class="row">
             <?php foreach ($products as $product): ?>

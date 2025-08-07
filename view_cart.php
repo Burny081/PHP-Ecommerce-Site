@@ -140,7 +140,7 @@ foreach ($cart_items as $item) {
                 </tbody>
             </table>
             <div class="d-flex justify-content-between align-items-center mt-4">
-                <h4>Total: Fcfa<?= $total ?></h4>
+                <h4>Total: Fcfa <?= $total ?></h4>
                 <a href="checkout_pdf.php" class="btn btn-success" target="_blank"><i class="fas fa-check me-2"></i>Proceed to Checkout</a>
             </div>
         <?php endif; ?>

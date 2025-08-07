@@ -100,6 +100,9 @@ foreach ($cart_items as $item) {
                         <a class="nav-link" href="products.php"><i class="fas fa-arrow-left me-2"></i>Back to Products</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="order_history.php"><i class="fas fa-list me-2"></i>My Orders</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                     </li>
                 </ul>
@@ -141,7 +144,7 @@ foreach ($cart_items as $item) {
             </table>
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <h4>Total: Fcfa <?= $total ?></h4>
-                <a href="checkout_pdf.php" class="btn btn-success" target="_blank"><i class="fas fa-check me-2"></i>Proceed to Checkout</a>
+                <a href="checkout.php" class="btn btn-success"><i class="fas fa-check me-2"></i>Proceed to Checkout</a>
             </div>
         <?php endif; ?>
     </div>

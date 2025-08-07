@@ -12,6 +12,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
     exit;
 }
 
+
+
+// Handle out of stock/in stock toggle
+if (isset($_GET['action']) && ($_GET['action'] == 'out_of_stock' || $_GET['action'] == 'in_stock')) {
+    $id = $_GET['id'];
+    $new_status = $_GET['action'] == 'out_of_stock' ? 'out_of_stock' : 'in_stock';
+    $stmt = $pdo->prepare("UPDATE products SET status = ? WHERE id = ?");
+    $stmt->execute([$new_status, $id]);
+    header("Location: manage_products.php");
+    exit;
+}
+
 $products = $pdo->query("SELECT p.*, c.name AS category_name FROM products p JOIN categories c ON p.category_id = c.id")->fetchAll();
 
 if (isset($_GET['action']) && $_GET['action'] == 'delete') {
@@ -144,6 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <th>Price</th>
                             <th>Offer</th>
                             <th>Category</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -157,8 +170,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <td>Fcfa <?= $product['offer'] ?></td>
                                 <td><?= htmlspecialchars($product['category_name']) ?></td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal<?= $product['id'] ?>"><i class="fas fa-edit me-2"></i>Edit</button>
-                                    <a href="manage_products.php?action=delete&id=<?= $product['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                                    <?php if (isset($product['status']) && $product['status'] === 'out_of_stock'): ?>
+                                        <span class="badge bg-danger">Out of Stock</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-success">In Stock</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (isset($product['status']) && $product['status'] === 'out_of_stock') {
+                                        echo '<a href="manage_products.php?action=in_stock&id=' . $product['id'] . '" class="btn btn-secondary btn-sm me-2" style="min-width:110px; float:left;" onclick="return confirm(\'Mark this product as in stock?\')"><i class="fas fa-check me-2"></i>In Stock</a>';
+                                    } else {
+                                        echo '<a href="manage_products.php?action=out_of_stock&id=' . $product['id'] . '" class="btn btn-secondary btn-sm me-2" style="min-width:110px; float:left;" onclick="return confirm(\'Mark this product as out of stock?\')"><i class="fas fa-ban me-2"></i>Out of Stock</a>';
+                                    }
+                                    ?>
+                                    <button class="btn btn-warning btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#editModal<?= $product['id'] ?>"><i class="fas fa-edit me-2"></i>Edit</button>
+                                    <a href="manage_products.php?action=delete&id=<?= $product['id'] ?>" class="btn btn-danger btn-sm ms-2" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt me-2"></i>Delete</a>
                                 </td>
                             </tr>
                             <div class="modal fade" id="editModal<?= $product['id'] ?>" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">

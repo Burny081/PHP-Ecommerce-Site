@@ -128,12 +128,21 @@ $related_products = $related_stmt->fetchAll();
                     <p><i class="fas fa-info-circle me-2"></i><strong>Description:</strong> <?= htmlspecialchars($product['description']) ?></p>
                     <p><i class="fas fa-dollar-sign me-2"></i><strong>Price:</strong> Fcfa <?= $product['price'] ?></p>
                     <p><i class="fas fa-tags me-2"></i><strong>Offer:</strong> Fcfa <?= $product['offer'] ?></p>
-                    <form method="get" action="cart.php" class="d-flex align-items-center">
+                    <?php if (isset($product['status']) && $product['status'] === 'out_of_stock'): ?>
+                        <span class="badge bg-danger mb-2">Out of Stock</span>
+                    <?php else: ?>
+                        <span class="badge bg-success mb-2">In Stock</span>
+                    <?php endif; ?>
+                    <form method="get" action="cart.php" class="d-flex align-items-center mt-2">
                         <input type="hidden" name="action" value="add">
                         <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                         <label for="quantity" class="me-2 mb-0"><strong>Quantity:</strong></label>
                         <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;">
-                        <button type="submit" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</button>
+                        <?php if (!isset($product['status']) || $product['status'] !== 'out_of_stock'): ?>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</button>
+                        <?php else: ?>
+                            <button type="button" class="btn btn-secondary" disabled><i class="fas fa-ban me-2"></i>Unavailable</button>
+                        <?php endif; ?>
                     </form>
                 </div>
             </div>

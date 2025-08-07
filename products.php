@@ -181,9 +181,18 @@ $products = $stmt->fetchAll();
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($product['title']) ?></h5>
                             <p class="card-text text-muted">Price: Fcfa <?= $product['price'] ?> <br>Offer: Fcfa <?= $product['offer'] ?></p>
-                            <div class="d-flex justify-content-between">
+                            <?php if (isset($product['status']) && $product['status'] === 'out_of_stock'): ?>
+                                <span class="badge bg-danger mb-2">Out of Stock</span>
+                            <?php else: ?>
+                                <span class="badge bg-success mb-2">In Stock</span>
+                            <?php endif; ?>
+                            <div class="d-flex justify-content-between mt-2">
                                 <a href="product_details.php?id=<?= $product['id'] ?>" class="btn btn-primary"><i class="fas fa-eye me-2"></i>View Details</a>
-                                <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
+                                <?php if (!isset($product['status']) || $product['status'] !== 'out_of_stock'): ?>
+                                    <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
+                                <?php else: ?>
+                                    <button class="btn btn-secondary" disabled><i class="fas fa-ban me-2"></i>Unavailable</button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

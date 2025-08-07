@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Créer un compte</title>
+    <title>Create Account</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -53,22 +53,22 @@
             // Check for duplicate username or email
             $check = $conn->query("SELECT id FROM users WHERE username = '$username' OR email = '$email' LIMIT 1");
             if ($check && $check->num_rows > 0) {
-                echo '<div class="alert alert-danger">Ce nom d\'utilisateur ou cet email existe déjà.</div>';
+                echo '<div class="alert alert-danger">This username or email already exists.</div>';
             } else {
                 $sql = "INSERT INTO users (username, email, password, role) VALUES ('$username', '$email', '$password', '$role')";
                 if ($conn->query($sql) === TRUE) {
                     header('Location: login.php');
                     exit;
                 } else {
-                    echo '<div class="alert alert-danger">Erreur : ' . $conn->error . '</div>';
+                    echo '<div class="alert alert-danger">Error: ' . $conn->error . '</div>';
                 }
             }
         }
         ?>
         <form method="post">
-            <h2 class="mb-4 text-center">Créer un compte</h2>
+            <h2 class="mb-4 text-center">Create Account</h2>
             <div class="mb-3">
-                <label class="form-label">Nom d'utilisateur</label>
+                <label class="form-label">Username</label>
                 <input type="text" name="username" class="form-control" required>
             </div>
             <div class="mb-3">
@@ -76,10 +76,10 @@
                 <input type="email" name="email" class="form-control" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Mot de passe</label>
+                <label class="form-label">Password</label>
                 <input type="password" name="password" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
         </form>
     </div>
 </div>

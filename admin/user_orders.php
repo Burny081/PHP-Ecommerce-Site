@@ -13,6 +13,25 @@ $user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
 $user = $pdo->prepare('SELECT * FROM users WHERE id = ?');
 $user->execute([$user_id]);
 $user = $user->fetch();
+// Handle order deletion
+if (isset($_GET['delete_order'])) {
+    $delete_order_id = intval($_GET['delete_order']);
+    // Delete order items first
+    $pdo->prepare('DELETE FROM order_items WHERE order_id = ?')->execute([$delete_order_id]);
+    // Delete the order
+    $pdo->prepare('DELETE FROM orders WHERE id = ?')->execute([$delete_order_id]);
+    // Redirect to avoid resubmission
+    header("Location: user_orders.php?user_id=" . $user_id);
+    exit;
+}
+// Handle order termination
+if (isset($_GET['terminate_order'])) {
+    $terminate_order_id = intval($_GET['terminate_order']);
+    $pdo->prepare("UPDATE orders SET status = 'Finished' WHERE id = ?")->execute([$terminate_order_id]);
+    header("Location: user_orders.php?user_id=" . $user_id);
+    exit;
+}
+
 $orders = $pdo->prepare('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC');
 $orders->execute([$user_id]);
 $orders = $orders->fetchAll();
@@ -57,6 +76,7 @@ $orders = $orders->fetchAll();
                             <th>Date</th>
                             <th>Status</th>
                             <th>Total</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,10 +85,17 @@ $orders = $orders->fetchAll();
                             <td><?= $order['id'] ?></td>
                             <td><?= htmlspecialchars($order['created_at'] ?? '') ?></td>
                             <td><?= htmlspecialchars($order['status'] ?? '') ?></td>
-                            <td><?= htmlspecialchars($order['total'] ?? '') ?></td>
+                            <td>Fcfa <?= htmlspecialchars($order['total'] ?? '') ?></td>
+                            <td>
+                                <a href="user_orders.php?user_id=<?= $user_id ?>&delete_order=<?= $order['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this order?')"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                                <?php if ($order['status'] !== 'Finished'): ?>
+                                    <a href="user_orders.php?user_id=<?= $user_id ?>&terminate_order=<?= $order['id'] ?>" class="btn btn-success btn-sm ms-2" onclick="return confirm('Mark this order as finished?')"><i class="fas fa-check me-2"></i>Terminate</a>
+                                <?php endif; ?>
+                                <a href="order_items.php?order_id=<?= $order['id'] ?>" class="btn btn-primary btn-sm ms-2"><i class="fas fa-eye me-2"></i>View</a>
+                            </td>
                         </tr>
                     <?php endforeach; else: ?>
-                        <tr><td colspan="4" class="text-center">No orders found.</td></tr>
+                        <tr><td colspan="5" class="text-center">No orders found.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>

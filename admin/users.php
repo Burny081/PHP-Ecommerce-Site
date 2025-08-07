@@ -63,7 +63,7 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin'")->fetchAll();
                             <th>Username</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Registered</th>
+                            
                             <th>Commands</th>
                             <th>Action</th>
                         </tr>
@@ -75,7 +75,7 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin'")->fetchAll();
                             <td><?= htmlspecialchars($user['username']) ?></td>
                             <td><?= htmlspecialchars($user['email']) ?></td>
                             <td><?= htmlspecialchars($user['role']) ?></td>
-                            <td><?= htmlspecialchars($user['created_at'] ?? '') ?></td>
+                            
                             <td><a href="user_orders.php?user_id=<?= $user['id'] ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a></td>
                             <td><a href="users.php?delete=<?= $user['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')"><i class="fas fa-trash"></i> Delete</a></td>
                         </tr>

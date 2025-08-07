@@ -109,8 +109,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
             <a href="index.php" class="nav-link"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
             <a href="add_product.php" class="nav-link"><i class="fas fa-plus-circle me-2"></i>Add Product</a>
             <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
-            <a href="add_category.php" class="nav-link active"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
-            <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+        <a href="add_category.php" class="nav-link active"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
+        <a href="users.php" class="nav-link"><i class="fas fa-users me-2"></i>Users</a>
+        <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
         </div>
         <div class="flex-grow-1">
             <div class="content">

@@ -32,35 +32,44 @@ $item_stmt = $pdo->prepare("SELECT oi.*, p.title FROM order_items oi JOIN produc
 $item_stmt->execute([$order_id]);
 $order_items = $item_stmt->fetchAll();
 
+
 $pdf = new FPDF();
 $pdf->AddPage();
+$pdf->SetFont('Arial','B',22);
+$pdf->Cell(0,15,'COMPARABLE sarl',0,1,'C');
 $pdf->SetFont('Arial','B',16);
 $pdf->Cell(0,10,'Order Receipt',0,1,'C');
 $pdf->SetFont('Arial','',12);
-$pdf->Ln(5);
+$pdf->Ln(2);
+// Fetch user name
+$user_stmt = $pdo->prepare('SELECT username FROM users WHERE id = ?');
+$user_stmt->execute([$user_id]);
+$user = $user_stmt->fetch();
+$pdf->Cell(0,10,'Customer: '.($user ? $user['username'] : 'Unknown'),0,1);
 $pdf->Cell(0,10,'Date: '.date('Y-m-d H:i', strtotime($order['created_at'])),0,1);
 $pdf->Ln(3);
 
+
 $pdf->SetFont('Arial','B',12);
 $pdf->Cell(70,10,'Product',1);
-$pdf->Cell(30,10,'Price',1);
+$pdf->Cell(30,10,'Price (Fcfa)',1);
 $pdf->Cell(20,10,'Qty',1);
-$pdf->Cell(30,10,'Subtotal',1);
+$pdf->Cell(30,10,'Subtotal (Fcfa)',1);
 $pdf->Ln();
 $pdf->SetFont('Arial','',12);
 $total = 0;
 foreach ($order_items as $item) {
     $line_total = $item['price'] * $item['quantity'];
     $pdf->Cell(70,10,iconv('UTF-8','windows-1252',$item['title']),1);
-    $pdf->Cell(30,10,$item['price'],1);
+    $pdf->Cell(30,10,$item['price'].' Fcfa',1);
     $pdf->Cell(20,10,$item['quantity'],1);
-    $pdf->Cell(30,10,$line_total,1);
+    $pdf->Cell(30,10,$line_total.' Fcfa',1);
     $pdf->Ln();
     $total += $line_total;
 }
 $pdf->SetFont('Arial','B',12);
 $pdf->Cell(120,10,'Total',1);
-$pdf->Cell(30,10,$total,1);
+$pdf->Cell(30,10,$total.' Fcfa',1);
 $pdf->Ln(15);
 $pdf->SetFont('Arial','I',10);
 $pdf->Cell(0,10,'Thank you for your purchase!',0,1,'C');

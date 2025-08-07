@@ -1,4 +1,4 @@
-/<?php
+<?php
 // Define default font path if not already defined
 if (!defined('FPDF_FONTPATH')) {
 	define('FPDF_FONTPATH', __DIR__ . '/font/');

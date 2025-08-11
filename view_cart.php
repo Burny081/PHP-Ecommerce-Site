@@ -144,7 +144,9 @@ foreach ($cart_items as $item) {
             </table>
             <div class="d-flex justify-content-between align-items-center mt-4">
                 <h4>Total: Fcfa <?= $total ?></h4>
-                <a href="checkout.php" class="btn btn-success"><i class="fas fa-check me-2"></i>Proceed to Checkout</a>
+                <form method="post" action="checkout.php" onsubmit="this.querySelector('button').disabled=true; return true;" style="display:inline;">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-check me-2"></i>Proceed to Checkout</button>
+                </form>
             </div>
         <?php endif; ?>
     </div>

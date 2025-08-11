@@ -45,9 +45,19 @@ $products = $stmt->fetchAll();
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar { display: none; }
+            .container.mt-5 { margin-top: 2rem !important; }
+        }
+        @media (max-width: 768px) {
+            .product-card { margin-bottom: 1.5rem; }
+            .product-image { height: 140px; }
+            h2 { font-size: 1.5rem; }
+        }
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f8f9fa;
+            background: #e0e0e0;
             overflow-x: hidden;
         }
         .bg-anim {
@@ -59,14 +69,14 @@ $products = $stmt->fetchAll();
         .blob {
             position: absolute;
             border-radius: 50%;
-            opacity: 0.45;
-            filter: blur(40px);
+            opacity: 0.35;
+            filter: blur(32px);
             mix-blend-mode: lighten;
             animation: floatBlob 18s infinite linear;
         }
         @keyframes floatBlob {
             0%   { transform: translateY(0) scale(1); }
-            50%  { transform: translateY(-60px) scale(1.1); }
+            50%  { transform: translateY(-40px) scale(1.08); }
             100% { transform: translateY(0) scale(1); }
         }
         .navbar {
@@ -128,15 +138,38 @@ $products = $stmt->fetchAll();
     </style>
 </head>
 <body>
-    <div class="bg-anim">
-        <div class="blob" style="width: 400px; height: 400px; background: radial-gradient(circle at 30% 30%, #007bff 60%, transparent 100%); left: -120px; top: -100px; animation-delay: 0s;"></div>
-        <div class="blob" style="width: 350px; height: 350px; background: radial-gradient(circle at 70% 70%, #00c3ff 60%, transparent 100%); right: -100px; top: 120px; animation-delay: 3s;"></div>
-        <div class="blob" style="width: 300px; height: 300px; background: radial-gradient(circle at 50% 50%, #ff6ec4 60%, transparent 100%); left: 50vw; bottom: -120px; animation-delay: 6s;"></div>
-    </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Background animation removed for solid gray color -->
+    <?php
+    $lang = isset($_GET['lang']) ? $_GET['lang'] : 'en';
+    $t = [
+        'en' => [
+            'products' => 'Our Products',
+            'view_cart' => 'View Cart',
+            'logout' => 'Logout',
+            'order_history' => 'Order History',
+            'search' => 'Search...',
+            'category' => 'Category',
+            'add_to_cart' => 'Add to Cart',
+            'in_stock' => 'In Stock',
+            'out_of_stock' => 'Out of Stock',
+        ],
+        'fr' => [
+            'products' => 'Nos Produits',
+            'view_cart' => 'Voir le Panier',
+            'logout' => 'Déconnexion',
+            'order_history' => 'Historique',
+            'search' => 'Rechercher...',
+            'category' => 'Catégorie',
+            'add_to_cart' => 'Ajouter au Panier',
+            'in_stock' => 'En Stock',
+            'out_of_stock' => 'Rupture',
+        ]
+    ];
+    ?>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm" style="color:#212529;">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <img src="img/logo.jpg" alt="Logo" style="height:100px;width:100px;object-fit:contain;">
+            <a class="navbar-brand d-flex align-items-center gap-2 text-dark" href="#" style="color:#212529 !important;">
+                <img src="img/logo.png" alt="Logo" style="height:100px;width:100px;object-fit:contain;">
                 Comparable
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -145,17 +178,24 @@ $products = $stmt->fetchAll();
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="view_cart.php"><i class="fas fa-shopping-cart me-2"></i>View Cart</a>
+                        <a class="nav-link text-dark" href="order_history.php?lang=<?= $lang ?>" style="color:#212529 !important;"><i class="fas fa-history me-2 text-dark"></i><?= $t[$lang]['order_history'] ?></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                        <a class="nav-link text-dark" href="view_cart.php?lang=<?= $lang ?>" style="color:#212529 !important;"><i class="fas fa-shopping-cart me-2 text-dark"></i><?= $t[$lang]['view_cart'] ?></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" href="logout.php?lang=<?= $lang ?>" style="color:#212529 !important;"><i class="fas fa-sign-out-alt me-2 text-dark"></i><?= $t[$lang]['logout'] ?></a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container mt-5" style="position: relative; z-index: 1;">
-        <h2 class="mb-4">Our Products</h2>
+        <div class="d-flex justify-content-end mb-2">
+            <a href="?lang=en" class="btn btn-outline-primary btn-sm me-2">English</a>
+            <a href="?lang=fr" class="btn btn-outline-secondary btn-sm">Français</a>
+        </div>
+        <h2 class="mb-4"><?= $t[$lang]['products'] ?></h2>
         <div class="mb-4 d-flex align-items-end gap-3">
             <div>
                 <label for="category" class="form-label"><i class="fas fa-filter me-2"></i>Filter by Category</label>

@@ -6,6 +6,11 @@ if (!isset($pdo)) {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: view_cart.php");
+    exit;
+}
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
     header("Location: login.php");
     exit;

@@ -7,7 +7,9 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') DEFAULT 'user',
-    email VARCHAR(30) NOT NULL
+    email VARCHAR(30) NOT NULL,
+    reset_token VARCHAR(64) DEFAULT NULL,
+    reset_expires DATETIME DEFAULT NULL
 );
 
 -- Table CATEGORIES
@@ -75,4 +77,14 @@ INSERT INTO categories (name) VALUES ('Electronics'), ('Clothing');
 INSERT INTO products (title, description, price, offer, category_id, image)
 VALUES 
 ('Laptop', 'High-performance laptop', 1000, 800, 1, 'https://some-image-location-or-upload'),
-('T-Shirt', 'Comfortable cotton t-shirt', 20, 15, 2, 'https://some-image-location-or-upload');
+
+-- Table MESSAGES
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    content TEXT NOT NULL,
+    sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id),
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
+);

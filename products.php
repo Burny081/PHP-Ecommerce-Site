@@ -181,6 +181,9 @@ $products = $stmt->fetchAll();
                         <a class="nav-link text-dark" href="order_history.php?lang=<?= $lang ?>" style="color:#212529 !important;"><i class="fas fa-history me-2 text-dark"></i><?= $t[$lang]['order_history'] ?></a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-dark" href="chat.php" style="color:#212529 !important;"><i class="fas fa-comments me-2 text-dark"></i>Chat</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-dark" href="view_cart.php?lang=<?= $lang ?>" style="color:#212529 !important;"><i class="fas fa-shopping-cart me-2 text-dark"></i><?= $t[$lang]['view_cart'] ?></a>
                     </li>
                     <li class="nav-item">

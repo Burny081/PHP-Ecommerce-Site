@@ -9,23 +9,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+            background: linear-gradient(135deg, #0d1b2a 0%, #4b7262ff 100%);
             color: #e0e6ed;
             min-height: 100vh;
         }
         .card {
-            background: #1b263b;
+            background: #a8856dff;
             border: none;
             box-shadow: 0 8px 32px #0004;
             color: #e0e6ed;
         }
         .form-label, .form-control, .form-control:focus {
             color: #e0e6ed;
-            background: #0d1b2a;
-            border-color: #274690;
+            border-color: #617dbeff;
         }
         .btn-primary {
-            background: #274690;
+            background: #661748ff;
             border: none;
         }
         .btn-primary:hover {

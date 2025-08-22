@@ -19,7 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($user && $password === $user['password']) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role'];
-        if ($user['role'] == 'admin') {
+        if ($user['role'] == 'superadmin') {
+            header("Location: superadmin/index.php");
+        } elseif ($user['role'] == 'admin') {
             header("Location: admin/index.php");
         } else {
             header("Location: products.php");

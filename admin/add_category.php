@@ -103,46 +103,58 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') {
     </style>
 </head>
 <body>
-    <div class="d-flex">
-        <div class="sidebar">
-            <h4 class="text-white text-center mb-4">Admin Panel</h4>
-            <a href="index.php" class="nav-link"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-            <a href="add_product.php" class="nav-link"><i class="fas fa-plus-circle me-2"></i>Add Product</a>
-            <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
-        <a href="add_category.php" class="nav-link active"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
-    <a href="users.php" class="nav-link"><i class="fas fa-users me-2"></i>Users</a>
-    <a href="../chat.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
-    <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
-        </div>
-        <div class="flex-grow-1">
-            <div class="content">
-                <h2 class="mb-4">Add/Delete Categories</h2>
-                <div class="form-card mb-5">
-                    <form method="POST">
-                        <div class="mb-3">
-                            <label for="name" class="form-label"><i class="fas fa-tag me-2"></i>Category Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <button type="submit" name="add_category" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Category</button>
-                    </form>
-                </div>
-                <h3 class="mb-3">Existing Categories</h3>
-                <ul class="list-group">
-                    <?php foreach ($categories as $category): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-tag me-2 text-primary"></i><?= htmlspecialchars($category['name']) ?></span>
-                            <a href="add_category.php?action=delete&id=<?= $category['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt me-2"></i>Delete</a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+    <!-- Toggle button for sidebar collapse on small screens -->
+    <div class="d-md-none p-2">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse">
+            Menu
+        </button>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar wrapped in collapse -->
+            <div class="collapse d-md-block col-12 col-md-3" id="sidebarCollapse">
+                <nav class="sidebar p-3">
+                    <h4 class="text-white text-center mb-4">Admin Panel</h4>
+                    <!-- Hiding the Dashboard link -->
+                    <a href="index.php" class="nav-link d-none"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="add_product.php" class="nav-link"><i class="fas fa-plus-circle me-2"></i>Add Product</a>
+                    <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
+                    <a href="add_category.php" class="nav-link active"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
+                    <a href="users.php" class="nav-link"><i class="fas fa-users me-2"></i>Users</a>
+                    <a href="../chat.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
+                    <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                </nav>
             </div>
-            <footer class="text-center">
-                <div class="container">
-                    <p>&copy; Nestor. All Rights Reserved.</p>
-                    <P><b>contact +237 690640554</b></P>
-            <p><b><u>help email: bongnitambe@gmail.com</u></b></p>
+            <main class="col-12 col-md-9">
+                <div class="content">
+                    <h2 class="mb-4">Add/Delete Categories</h2>
+                    <div class="form-card mb-5">
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label"><i class="fas fa-tag me-2"></i>Category Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <button type="submit" name="add_category" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Category</button>
+                        </form>
+                    </div>
+                    <h3 class="mb-3">Existing Categories</h3>
+                    <ul class="list-group">
+                        <?php foreach ($categories as $category): ?>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-tag me-2 text-primary"></i><?= htmlspecialchars($category['name']) ?></span>
+                                <a href="add_category.php?action=delete&id=<?= $category['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt me-2"></i>Delete</a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-            </footer>
+                <footer class="text-center">
+                    <div class="container">
+                        <p>&copy; Nestor. All Rights Reserved.</p>
+                        <P><b>contact +237 690640554</b></P>
+                        <p><b><u>help email: bongnitambe@gmail.com</u></b></p>
+                    </div>
+                </footer>
+            </main>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

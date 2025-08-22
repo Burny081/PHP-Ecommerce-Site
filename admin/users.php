@@ -42,50 +42,66 @@ $users = $pdo->query("SELECT * FROM users WHERE role != 'admin'")->fetchAll();
     </style>
 </head>
 <body>
-<div class="d-flex">
-    <div class="sidebar">
-        <h4 class="text-white text-center mb-4">Admin Panel</h4>
-        <a href="index.php" class="nav-link"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-        <a href="add_product.php" class="nav-link"><i class="fas fa-plus-circle me-2"></i>Add Product</a>
-        <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
-        <a href="add_category.php" class="nav-link"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
-    <a href="users.php" class="nav-link active"><i class="fas fa-users me-2"></i>Users</a>
-    <a href="../chat.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
-    <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+    <!-- Toggle button for sidebar collapse on small screens -->
+    <div class="d-md-none p-2">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse">
+            Menu
+        </button>
     </div>
-    <div class="flex-grow-1">
-        <div class="content">
-            <h2 class="mb-4">Users Management</h2>
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            
-                            <th>Commands</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr>
-                            <td><?= $user['id'] ?></td>
-                            <td><?= htmlspecialchars($user['username']) ?></td>
-                            <td><?= htmlspecialchars($user['email']) ?></td>
-                            <td><?= htmlspecialchars($user['role']) ?></td>
-                            
-                            <td><a href="user_orders.php?user_id=<?= $user['id'] ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a></td>
-                            <td><a href="users.php?delete=<?= $user['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')"><i class="fas fa-trash"></i> Delete</a></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar wrapped in collapse -->
+            <div class="collapse d-md-block col-12 col-md-3" id="sidebarCollapse">
+                <nav class="sidebar p-3">
+                    <h4 class="text-white text-center mb-4">Admin Panel</h4>
+                    <!-- Hiding the Dashboard link -->
+                    <a href="index.php" class="nav-link d-none"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="add_product.php" class="nav-link"><i class="fas fa-plus-circle me-2"></i>Add Product</a>
+                    <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
+                    <a href="add_category.php" class="nav-link"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
+                    <a href="users.php" class="nav-link active"><i class="fas fa-users me-2"></i>Users</a>
+                    <a href="../chat.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
+                    <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                </nav>
             </div>
+            <main class="col-12 col-md-9">
+                <div class="content">
+                    <h2 class="mb-4">Users Management</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    
+                                    <th>Commands</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <td><?= $user['id'] ?></td>
+                                    <td><?= htmlspecialchars($user['username']) ?></td>
+                                    <td><?= htmlspecialchars($user['email']) ?></td>
+                                    <td><?= htmlspecialchars($user['role']) ?></td>
+                                    
+                                    <td><a href="user_orders.php?user_id=<?= $user['id'] ?>" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a></td>
+                                    <td><a href="users.php?delete=<?= $user['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this user?')"><i class="fas fa-trash"></i> Delete</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <footer class="text-center">
+                    <p class="mb-0">&copy; <?= date('Y') ?> Your Company. All rights reserved.</p>
+                </footer>
+            </main>
         </div>
     </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

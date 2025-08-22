@@ -94,40 +94,39 @@ $products = $stmt->fetchAll();
             color: #007bff !important;
         }
         .product-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
-            will-change: transform;
-            perspective: 600px;
+            border-radius: 8px; /* reduced radius */
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1); /* lighter shadow */
+            transition: transform 0.3s cubic-bezier(.25, .8, .25, 1);
+            padding: 8px; /* reduced padding */
         }
         .product-card:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
-        }
-        .product-card:active {
-            transform: scale(0.98);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
         }
         .product-image {
-            height: 200px;
+            height: 130px; /* reduced height */
             object-fit: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        /* Ensure 4 items per row on medium+ screens */
+        @media (min-width: 768px) {
+            .product-col {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
         }
         .btn-primary, .btn-success {
-            border-radius: 10px;
-            padding: 8px 15px;
-            transition: background 0.3s ease;
+            padding: 4px 8px; /* smaller buttons */
+            font-size: 0.8rem;
+            border-radius: 8px;
         }
-        .btn-primary:hover {
-            background: #0056b3;
+        .card-title {
+            font-size: 1rem; /* reduced title size */
+            margin-bottom: 0.5rem;
         }
-        .btn-success:hover {
-            background: #218838;
-        }
-        .form-select {
-            border-radius: 10px;
-            border: 1px solid #ced4da;
+        .card-text {
+            font-size: 0.85rem; /* reduced text size */
         }
         footer {
             background: #343a40;
@@ -221,23 +220,32 @@ $products = $stmt->fetchAll();
         </div>
         <div class="row">
             <?php foreach ($products as $product): ?>
-                <div class="col-md-4 mb-4">
+                <!-- Changed grid column to show 4 items per row -->
+                <div class="col-6 col-md-3 mb-4 product-col">
                     <div class="card product-card">
                         <img src="<?= htmlspecialchars($product['image']) ?>" class="card-img-top product-image" alt="<?= htmlspecialchars($product['title']) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($product['title']) ?></h5>
-                            <p class="card-text text-muted">Price: Fcfa <?= $product['price'] ?> <br>Offer: Fcfa <?= $product['offer'] ?></p>
+                            <p class="card-text text-muted">
+                                Price: Fcfa <?= $product['price'] ?> <br>Offer: Fcfa <?= $product['offer'] ?>
+                            </p>
                             <?php if (isset($product['status']) && $product['status'] === 'out_of_stock'): ?>
                                 <span class="badge bg-danger mb-2">Out of Stock</span>
                             <?php else: ?>
                                 <span class="badge bg-success mb-2">In Stock</span>
                             <?php endif; ?>
                             <div class="d-flex justify-content-between mt-2">
-                                <a href="product_details.php?id=<?= $product['id'] ?>" class="btn btn-primary"><i class="fas fa-eye me-2"></i>View Details</a>
+                                <a href="product_details.php?id=<?= $product['id'] ?>" class="btn btn-primary">
+                                    <i class="fas fa-eye me-1"></i>Details
+                                </a>
                                 <?php if (!isset($product['status']) || $product['status'] !== 'out_of_stock'): ?>
-                                    <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success"><i class="fas fa-cart-plus me-2"></i>Add to Cart</a>
+                                    <a href="cart.php?action=add&product_id=<?= $product['id'] ?>" class="btn btn-success">
+                                        <i class="fas fa-cart-plus me-1"></i>Cart
+                                    </a>
                                 <?php else: ?>
-                                    <button class="btn btn-secondary" disabled><i class="fas fa-ban me-2"></i>Unavailable</button>
+                                    <button class="btn btn-secondary" disabled>
+                                        <i class="fas fa-ban me-1"></i>N/A
+                                    </button>
                                 <?php endif; ?>
                             </div>
                         </div>

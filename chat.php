@@ -75,7 +75,7 @@ if ($partner_id) {
 <body>
 <div class="container mt-5" style="max-width:600px;">
     <div class="mb-3">
-    <a href="<?= ($_SESSION['role']=='admin' ? 'index.php' : 'products.php') ?>" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back</a>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back</a>
     </div>
     <h2 class="mb-4">Chat <?= ($_SESSION['role']=='admin' && $partner_id) ? 'with User' : 'with Admin' ?></h2>
     <?php if ($_SESSION['role']=='admin' && !isset($partner_id)): ?>

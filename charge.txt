@@ -1,0 +1,154 @@
+Cahier des charges – Site Web E commerce Basique
+
+
+Existant :
+Le site de COMPARABLE SARL est bien pensé, avec une structure claire et un design épuré qui facilite la navigation. On sent une vraie volonté de professionnalisme, même si quelques bugs mineurs restent à corriger. Cela dit, une question se pose : pourquoi se limiter uniquement à la vente de services ? L’ajout de produits physiques comme des appareils liés aux services proposés (par exemple : équipements, accessoires, outils) pourrait non seulement enrichir l’offre mais aussi répondre à une demande plus large. Le site a du potentiel, mais gagnerait à sortir de cette simplicité presque minimaliste pour adopter une interface un peu plus dynamique et adaptée à l’ambition de l’entreprise
+
+Problematique :
+Le site de COMPARABLE SARL présente une structure bien pensée, avec un design simple et une navigation fluide. Toutefois, il reste limité par son orientation exclusivement tournée vers la vente de services. Pour répondre à une demande plus large et accroître son impact, il serait pertinent d’ajouter des produits physiques complémentaires (appareils, accessoires, etc.). De plus, bien que l’interface soit fonctionnelle, elle gagnerait à être rendue plus dynamique et professionnelle, en corrigeant les petits bugs et en ajoutant des éléments interactifs. Une évolution dans ce sens permettrait à la plateforme de mieux répondre aux attentes du marché tout en conservant sa base solide
+Objectives :
+Pour développer un site e-commerce simple à destination du grand public, il est essentiel de publier un catalogue clair, de permettre des paiements en ligne sécurisés et de disposer d’un tableau de bord d’administration efficace.
+Les solutions proposées incluent l’utilisation d’un CMS e-commerce (comme Shopify ou WooCommerce), une interface responsive et un back office intuitif pour gérer produits, commandes et clients. Des fonctionnalités complémentaires comme les comptes clients, avis produits, coupons ou assistance en ligne peuvent enrichir l’expérience utilisateur.
+
+Solutions :
+Pour atteindre les objectifs du projet, il est essentiel de :
+1.	Créer un catalogue en ligne bien structuré, avec fiches produits complètes et moteur de recherche.
+2.	Mettre en place un système de commande et de paiement sécurisé, incluant les paiements mobiles (Orange/MTN) et cartes bancaires.
+3.	Développer un back office pour gérer facilement les produits, commandes et clients.
+4.	Améliorer l’interface utilisateur avec un design responsive, fluide et intuitif.
+5.	Ajouter des fonctionnalités complémentaires : comptes clients, avis, promotions, assistance en ligne.
+2. Fonctionnalités principales
+2.1. Front Office (Interface client)
+📦 Catalogue de produits :
+•	Liste des produits avec image, nom, prix et disponibilité.
+•	Pages détaillées pour chaque produit.
+🛒 Panier et commande :
+•	Ajouter/supprimer des produits du panier.
+•	Calcul automatique du total.
+•	Processus de validation de commande simple.
+👤 Compte client :
+•	Inscription et connexion.
+•	Accès à l’historique des commandes.
+📱 Design responsive :
+•	Parfaitement compatible avec ordinateurs, tablettes et smartphones.
+
+
+________________________________________
+2.2. Back Office (Interface administrateur)
+🛠️ Gestion des produits :
+•	Ajouter, modifier ou supprimer des produits.
+📦 Gestion des commandes :
+•	Visualiser les commandes et mettre à jour leur statut (ex : En cours, Livrée).
+👥 Gestion des clients :
+•	Visualiser la liste des clients et leur historique de commandes.
+
+3. Exigences techniques
+🖥️ Technologies utilisées
+________________________________________
+✅ PHP (Hypertext Preprocessor)
+•	Rôle : Langage de programmation back-end (côté serveur).
+•	Utilité dans le projet :
+o	Gérer la logique du site (traitement des formulaires, gestion des sessions).
+o	Communiquer avec la base de données (MySQL).
+o	Générer dynamiquement les pages HTML (catalogue, panier, commandes...).
+________________________________________
+✅ MySQL
+•	Rôle : Système de gestion de base de données relationnelle.
+•	Utilité dans le projet :
+o	Stocker les données (produits, utilisateurs, commandes, paiements).
+o	Permettre les opérations CRUD (Create, Read, Update, Delete).
+o	Organiser les informations du site de manière structurée et consultable.
+________________________________________
+✅ JavaScript
+•	Rôle : Langage de programmation front-end (côté client).
+•	Utilité dans le projet :
+o	Rendre le site interactif (mise à jour de page sans rechargement, animations, alertes, gestion du panier en temps réel).
+o	Valider les formulaires avant l’envoi.
+o	Améliorer l’expérience utilisateur.
+________________________________________
+✅ HTML/CSS
+•	HTML (HyperText Markup Language) :
+o	Structure le contenu du site (titres, paragraphes, formulaires, boutons...).
+•	CSS (Cascading Style Sheets) :
+o	Gère l’apparence (couleurs, polices, mise en page, responsive design).
+•	Utilité dans le projet :
+o	Créer une interface claire, esthétique, et adaptée à tous les appareils (ordinateur, téléphone, tablette).
+________________________________________
+🛠️ Hébergement
+________________________________________
+✅ Serveur local de développement – LARAGON
+•	Définition : Environnement de développement local pour Windows.
+•	Fonctionnalités :
+o	Fournit Apache (serveur web), MySQL, PHP, et plus dans un seul outil.
+o	Permet de développer, tester et exécuter le site en local avant sa mise en ligne.
+o	Rapide, léger, et très simple à configurer.
+________________________________________
+✅ Déploiement sur un hébergement web
+•	Une fois le site finalisé, il sera transféré sur un hébergeur web pour être accessible au public.
+•	Doit inclure :
+o	PHP & MySQL compatibles
+o	Espace disque suffisant pour les données et fichiers
+o	Bande passante adaptée pour les visites
+________________________________________
+✅ Certificat SSL (Secure Sockets Layer)
+•	Rôle : Sécurise la connexion entre le site et les visiteurs (https://).
+•	Utilité :
+o	Protéger les données sensibles (paiement, mots de passe).
+o	Rassurer les utilisateurs (cadenas dans la barre d’adresse).
+o	Améliorer le référencement (Google favorise les sites sécurisés).
+
+
+
+
+
+💼 Budget et Ressources
+Détail Main-d’Œuvre
+Phase	Tâches	Durée estimée	Jours-homme	Coût (FCFA)
+Phase 1 – Conception	Analyse besoins, maquettes UI/UX (Figma), cahier des charges, arborescence fonctionnelle	2-3 semaines	12 j	600 000
+Phase 2 – Développement	Front : HTML/CSS/JS, pages produits, panier
+Back : Dashboard admin, connexion MySQL, API paiement	4-6 semaines	28 j	1 400 000
+Phase 3 – Tests & Déploiement	Tests scénarios critiques, responsive mobile, optimisation SEO, SSL, formation administrateur	2-3 semaines	10 j	500 000
+Phase 4 – Documentation & Formation	Guide installation, manuel admin, procédures maintenance, session formation (~1h)	4 jours	4 j	200 000
+💰 Total Main-d’œuvre			54 j	2 700 000
+________________________________________
+Coûts Annexes
+Élément	Description	Coût (FCFA)
+Hébergement + SSL (1 an)	Offre Pro Hostinger Sénégal	120 000
+Nom de domaine (.com / .sn)	Enregistrement annuel	15 000
+Audit RGPD	Conformité légale	100 000
+Pack marketing	Templates emails + visuels réseaux sociaux	80 000
+💰 Total Coûts Annexes		315 000
+________________________________________
+Récapitulatif Financier
+Poste	Montant (FCFA)
+Main-d'œuvre totale	2 700 000
+Coûts annexes	315 000
+Total HT	3 015 000
+TVA (18 %)	542 700
+TOTAL TTC	3 557 700
+	
+➕ Livrables Supplémentaires Recommandés
+Catégorie	Éléments inclus
+1. Pack de Formation	- Session vidéo (~1h) pour former l’administrateur aux opérations quotidiennes
+- FAQ interactive (ex : “Comment rembourser un client ?”)
+2. Kit Marketing de Base	- Modèles d’e-mails transactionnels (confirmation de commande, notification de livraison)
+- Visuels prêts à l’emploi pour réseaux sociaux (bannières promotionnelles)
+3. Rapport d’Optimisation	- Audit SEO technique (balises meta, vitesse de chargement, etc.)
+- Recommandations pour améliorer le taux de conversion
+________________________________________
+Spécifications Techniques des Livrables
+Section	Détails
+Compatibilité Web	Chrome, Firefox, Safari, iOS, Android
+Sécurité	- Protection contre injections SQL & XSS
+- Mots de passe chiffrés avec bcrypt
+Base de Données	Exemple table products :
+sql<br>CREATE TABLE products (<br> id INT PRIMARY KEY AUTO_INCREMENT,<br> name VARCHAR(100),<br> price DECIMAL(10,2),<br> stock INT<br>);<br>
+Sauvegardes	Sauvegarde quotidienne automatisée via cron job
+Documentation	Glossaire des termes techniques + contact support technique
+________________________________________
+Calendrier de Livraison
+Jalon	Délai	Validation Requise
+Livraison version bêta	Jour +30	Tests utilisateur client
+Corrections majeures	Jour +45	Rapport de test
+Livraison finale	Jour +60	Signature d’acceptation finale
+

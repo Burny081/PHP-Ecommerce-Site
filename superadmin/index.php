@@ -1,5 +1,5 @@
 <?php
-require_once '../config.php'; // Ensure $pdo is defined
+$pdo = require_once '../config.php'; // Ensure $pdo is defined and assigned
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +64,7 @@ require_once '../config.php'; // Ensure $pdo is defined
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Password:</label>
-						<input type="text" name="password" class="form-control" required>
+						<input type="password" name="password" class="form-control" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Email:</label>
@@ -82,7 +82,6 @@ require_once '../config.php'; // Ensure $pdo is defined
 				</form>
                 <!-- Display Existing Users -->
                 <?php
-                // Now $pdo is defined since it was required at the top.
                 $stmt = $pdo->query("SELECT * FROM users ORDER BY id ASC");
                 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 ?>
@@ -107,7 +106,7 @@ require_once '../config.php'; // Ensure $pdo is defined
                             <td><?= $user['created_at'] ?></td>
                             <td>
                                 <a href="edit_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-secondary">Edit</a>
-                                <a href="delete_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-danger">Delete</a>
+                                <a href="delete_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -138,22 +137,36 @@ require_once '../config.php'; // Ensure $pdo is defined
 				<table class="table table-bordered">
 					<thead>
 						<tr>
-							<th>ID</th>
-							<th>Event</th>
-							<th>Details</th>
-							<th>Created At</th>
+                            <th>ID</th>
+                            <th>User ID</th>
+                            <th>Event</th>
+                            <th>Details</th>
+                            <th>Timestamp</th>
 						</tr>
 					</thead>
 					<tbody>
-						<!-- Use dynamic rows fetched from the logs table -->
-						<!-- e.g.: -->
-						<tr>
-							<td>1</td>
-							<td>User Added</td>
-							<td>Admin added a new user.</td>
-							<td>2023-10-01 10:00:00</td>
-						</tr>
-						<!-- ...existing code... -->
+                        <?php
+                        try {
+                            // Assuming an 'audit_logs' table exists with columns like: id, user_id, action, details, created_at
+                            $log_stmt = $pdo->query("SELECT id, user_id, action, details, created_at FROM audit_logs ORDER BY created_at DESC LIMIT 100");
+                            $logs = $log_stmt->fetchAll(PDO::FETCH_ASSOC);
+                            if ($logs) {
+                                foreach ($logs as $log) {
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($log['id']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($log['user_id']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($log['action']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($log['details']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($log['created_at']) . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo '<tr><td colspan="5" class="text-center">No audit logs found.</td></tr>';
+                            }
+                        } catch (PDOException $e) {
+                            echo '<tr><td colspan="5" class="text-danger">Error fetching logs: ' . $e->getMessage() . '</td></tr>';
+                        }
+                        ?>
 					</tbody>
 				</table>
 			</div>
@@ -161,9 +174,49 @@ require_once '../config.php'; // Ensure $pdo is defined
 			<!-- Manage Orders Tab -->
 			<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
 				<h3 class="mt-3">Manage Orders</h3>
-				<!-- Placeholder for orders management -->
-				<!-- You could include a form to manually create an order or list orders and update their status -->
-				<p>Orders management functionality goes here. (List, update status, cancel orders, etc.)</p>
+                <?php
+                try {
+                    // Fetch all orders, joining with the users table to get customer username
+                    $order_stmt = $pdo->query("
+                        SELECT orders.id, orders.user_id, users.username, orders.total, orders.status, orders.created_at 
+                        FROM orders 
+                        JOIN users ON orders.user_id = users.id 
+                        ORDER BY orders.created_at DESC
+                    ");
+                    $orders = $order_stmt->fetchAll(PDO::FETCH_ASSOC);
+                } catch (PDOException $e) {
+                    echo '<div class="alert alert-danger">Error fetching orders: ' . $e->getMessage() . '</div>';
+                    $orders = []; // Ensure $orders is an array to prevent errors
+                }
+                ?>
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Order Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($orders): ?>
+                            <?php foreach ($orders as $order): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($order['id']) ?></td>
+                                    <td><?= htmlspecialchars($order['username']) ?> (ID: <?= htmlspecialchars($order['user_id']) ?>)</td>
+                                    <td>$<?= htmlspecialchars(number_format($order['total'], 2)) ?></td>
+                                    <td><span class="badge bg-<?php switch ($order['status']) { case 'pending': echo 'warning'; break; case 'processing': echo 'info'; break; case 'shipped': echo 'primary'; break; case 'delivered': echo 'success'; break; case 'cancelled': echo 'danger'; break; default: echo 'secondary'; } ?>"><?= htmlspecialchars(ucfirst($order['status'])) ?></span></td>
+                                    <td><?= htmlspecialchars($order['created_at']) ?></td>
+                                    <td><a href="view_order.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-info">View</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr><td colspan="6" class="text-center">No orders found.</td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
 			</div>
 			
 			<!-- Manage Content Tab -->

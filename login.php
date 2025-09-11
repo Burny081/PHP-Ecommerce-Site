@@ -82,6 +82,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn-primary:hover {
             background: #0056b3;
         }
+        .btn-success {
+            background: #28a745;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            transition: background 0.3s ease;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
     </style>
 </head>
 <body>
@@ -100,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
         <div class="text-center mt-3">
+            <a href="products.php" class="btn btn-success w-100 mb-2">Visit</a>
             <a href="register.php" class="btn btn-outline-primary w-100 mb-2">Create a New Account</a>
             <a href="reset_password.php" class="btn btn-outline-secondary w-100">Forgot Password?</a>
         </div>

@@ -1,5 +1,5 @@
-
 <?php
+// cart.php
 session_start();
 
 require_once 'config.php';
@@ -8,33 +8,76 @@ if (!isset($pdo)) {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
-    header("Location: login.php");
+$action     = $_POST['action'] ?? $_GET['action'] ?? null;
+$product_id = $_POST['product_id'] ?? $_GET['product_id'] ?? null;
+$quantity   = $_POST['quantity'] ?? $_GET['quantity'] ?? 1;
+$lang       = $_POST['lang'] ?? $_GET['lang'] ?? 'en';
+
+// Validate quantity
+$quantity = (is_numeric($quantity) && $quantity > 0) ? (int)$quantity : 1;
+
+// Logged-in?
+$is_logged_in = isset($_SESSION['user_id']);
+$user_id      = $is_logged_in ? $_SESSION['user_id'] : null;
+
+// Initialize session cart if not set
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Handle add/remove/update actions
+if ($action === 'add' && $product_id) {
+    if ($is_logged_in) {
+        // --- DB cart handling ---
+        $stmt = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$user_id, $product_id]);
+        $cart_item = $stmt->fetch();
+
+        if ($cart_item) {
+            $stmt = $pdo->prepare("UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?");
+            $stmt->execute([$quantity, $user_id, $product_id]);
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
+            $stmt->execute([$user_id, $product_id, $quantity]);
+        }
+    } else {
+        // --- Session cart handling ---
+        if (isset($_SESSION['cart'][$product_id])) {
+            $_SESSION['cart'][$product_id] += $quantity;
+        } else {
+            $_SESSION['cart'][$product_id] = $quantity;
+        }
+    }
+    header("Location: products.php?lang=$lang&message=Product added to cart");
     exit;
 }
 
-
-$user_id = $_SESSION['user_id'];
-$action = $_GET['action'];
-$product_id = $_GET['product_id'];
-
-// Get quantity from GET, default to 1 if not set or invalid
-$quantity = isset($_GET['quantity']) && is_numeric($_GET['quantity']) && $_GET['quantity'] > 0 ? (int)$_GET['quantity'] : 1;
-
-if ($action == 'add') {
-    $stmt = $pdo->prepare("SELECT * FROM cart WHERE user_id = ? AND product_id = ?");
-    $stmt->execute([$user_id, $product_id]);
-    $cart_item = $stmt->fetch();
-
-    if ($cart_item) {
-        $stmt = $pdo->prepare("UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?");
-        $stmt->execute([$quantity, $user_id, $product_id]);
+if ($action === 'remove' && $product_id) {
+    if ($is_logged_in) {
+        $stmt = $pdo->prepare("DELETE FROM cart WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$user_id, $product_id]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
-        $stmt->execute([$user_id, $product_id, $quantity]);
+        unset($_SESSION['cart'][$product_id]);
     }
+    header("Location: view_cart.php?lang=$lang&message=Product removed from cart");
+    exit;
 }
 
-header("Location: products.php");
+if ($action === 'update' && $product_id) {
+    if ($is_logged_in) {
+        $stmt = $pdo->prepare("UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?");
+        $stmt->execute([$quantity, $user_id, $product_id]);
+    } else {
+        if ($quantity > 0) {
+            $_SESSION['cart'][$product_id] = $quantity;
+        } else {
+            unset($_SESSION['cart'][$product_id]);
+        }
+    }
+    header("Location: view_cart.php?lang=$lang&message=Cart updated");
+    exit;
+}
+
+// Default fallback
+header("Location: products.php?lang=$lang");
 exit;
-?>

@@ -1,282 +1,181 @@
 <?php
-$pdo = require_once '../config.php'; // Ensure $pdo is defined and assigned
+session_start();
+$pdo = require_once '../config.php';
+
+// --- Sécurité basique ---
+if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'superadmin') {
+    // header("Location: ../login.php");
+    // exit;
+}
+
+// Gestion de l’ajout utilisateur/admin
+$msg = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_user'])) {
+    $username = trim($_POST['username'] ?? '');
+    $email    = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $role     = $_POST['role'] ?? 'user';
+
+    if ($username && $email && $password && in_array($role, ['user','admin'])) {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (username,email,password,role,created_at) VALUES (?,?,?,?,NOW())");
+        $stmt->execute([$username,$email,$hash,$role]);
+        $msg = "✅ $role ajouté avec succès.";
+    } else {
+        $msg = "⚠️ Veuillez remplir tous les champs.";
+    }
+}
+
+// Stats rapides
+$usersCount = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='user'")->fetchColumn();
+$adminsCount = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='admin'")->fetchColumn();
+$superAdminsCount = (int)$pdo->query("SELECT COUNT(*) FROM users WHERE role='superadmin'")->fetchColumn();
+$productsCount = (int)$pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
+$messagesCount = (int)$pdo->query("SELECT COUNT(*) FROM messages")->fetchColumn();
+$ordersCount = (int)$pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Super Admin Dashboard</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<!-- ...existing CSS... -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Super Admin — Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{background:#f6f7fb}
+    .card{border:0;border-radius:20px}
+    .nav-link.active{font-weight:600}
+    .table thead th {white-space:nowrap}
+  </style>
 </head>
 <body>
-	<!-- Navigation Bar -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<div class="container">
-			<a class="navbar-brand" href="#">Super Admin Dashboard</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSuperadmin" aria-controls="navbarSuperadmin" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSuperadmin">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item"><a class="nav-link" href="../logout.php">Logout</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-	
-	<!-- Main Container with Tabs -->
-	<div class="container mt-4">
-		<ul class="nav nav-tabs" id="superadminTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Manage Users</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Settings</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab" aria-controls="logs" aria-selected="false">Audit Logs</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab" aria-controls="orders" aria-selected="false">Manage Orders</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="false">Manage Content</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="messaging-tab" data-bs-toggle="tab" data-bs-target="#messaging" type="button" role="tab" aria-controls="messaging" aria-selected="false">Messaging</button>
-			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab" aria-controls="backup" aria-selected="false">Database Backup</button>
-			</li>
-		</ul>
-		
-		<div class="tab-content" id="superadminTabContent">
-			<!-- Manage Users Tab -->
-			<div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
-				<h3 class="mt-3">Manage Users</h3>
-				<!-- Inline Add User Form -->
-				<form method="POST" action="add_user.php">
-					<div class="mb-3">
-						<label class="form-label">Username:</label>
-						<input type="text" name="username" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Password:</label>
-						<input type="password" name="password" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Email:</label>
-						<input type="email" name="email" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Role:</label>
-						<select name="role" class="form-select">
-							<option value="user">User</option>
-							<option value="admin">Admin</option>
-							<option value="superadmin">Super Admin</option>
-						</select>
-					</div>
-					<button type="submit" class="btn btn-primary">Add User</button>
-				</form>
-                <!-- Display Existing Users -->
-                <?php
-                $stmt = $pdo->query("SELECT * FROM users ORDER BY id ASC");
-                $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                ?>
-                <table class="table mt-4">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Created At</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($users as $user): ?>
-                        <tr>
-                            <td><?= $user['id'] ?></td>
-                            <td><?= htmlspecialchars($user['username']) ?></td>
-                            <td><?= htmlspecialchars($user['email']) ?></td>
-                            <td><?= $user['role'] ?></td>
-                            <td><?= $user['created_at'] ?></td>
-                            <td>
-                                <a href="edit_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-secondary">Edit</a>
-                                <a href="delete_user.php?id=<?= $user['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-			</div>
-			
-			<!-- Settings Tab -->
-			<div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-				<h3 class="mt-3">Manage Settings</h3>
-				<form method="POST" action="manage_settings.php">
-					<div class="mb-3">
-						<label class="form-label">Site Title:</label>
-						<input type="text" name="settings[site_title]" class="form-control">
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Contact Email:</label>
-						<input type="email" name="settings[contact_email]" class="form-control">
-					</div>
-					<!-- ...add more settings fields as needed... -->
-					<button type="submit" class="btn btn-primary">Update Settings</button>
-				</form>
-			</div>
-			
-			<!-- Audit Logs Tab -->
-			<div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs-tab">
-				<h3 class="mt-3">Audit Logs</h3>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-                            <th>ID</th>
-                            <th>User ID</th>
-                            <th>Event</th>
-                            <th>Details</th>
-                            <th>Timestamp</th>
-						</tr>
-					</thead>
-					<tbody>
-                        <?php
-                        try {
-                            // Assuming an 'audit_logs' table exists with columns like: id, user_id, action, details, created_at
-                            $log_stmt = $pdo->query("SELECT id, user_id, action, details, created_at FROM audit_logs ORDER BY created_at DESC LIMIT 100");
-                            $logs = $log_stmt->fetchAll(PDO::FETCH_ASSOC);
-                            if ($logs) {
-                                foreach ($logs as $log) {
-                                    echo "<tr>";
-                                    echo "<td>" . htmlspecialchars($log['id']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($log['user_id']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($log['action']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($log['details']) . "</td>";
-                                    echo "<td>" . htmlspecialchars($log['created_at']) . "</td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo '<tr><td colspan="5" class="text-center">No audit logs found.</td></tr>';
-                            }
-                        } catch (PDOException $e) {
-                            echo '<tr><td colspan="5" class="text-danger">Error fetching logs: ' . $e->getMessage() . '</td></tr>';
-                        }
-                        ?>
-					</tbody>
-				</table>
-			</div>
-			
-			<!-- Manage Orders Tab -->
-			<div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-				<h3 class="mt-3">Manage Orders</h3>
-                <?php
-                try {
-                    // Fetch all orders, joining with the users table to get customer username
-                    $order_stmt = $pdo->query("
-                        SELECT orders.id, orders.user_id, users.username, orders.total, orders.status, orders.created_at 
-                        FROM orders 
-                        JOIN users ON orders.user_id = users.id 
-                        ORDER BY orders.created_at DESC
-                    ");
-                    $orders = $order_stmt->fetchAll(PDO::FETCH_ASSOC);
-                } catch (PDOException $e) {
-                    echo '<div class="alert alert-danger">Error fetching orders: ' . $e->getMessage() . '</div>';
-                    $orders = []; // Ensure $orders is an array to prevent errors
-                }
-                ?>
-                <table class="table table-bordered mt-3">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Total Price</th>
-                            <th>Status</th>
-                            <th>Order Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if ($orders): ?>
-                            <?php foreach ($orders as $order): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($order['id']) ?></td>
-                                    <td><?= htmlspecialchars($order['username']) ?> (ID: <?= htmlspecialchars($order['user_id']) ?>)</td>
-                                    <td>$<?= htmlspecialchars(number_format($order['total'], 2)) ?></td>
-                                    <td><span class="badge bg-<?php switch ($order['status']) { case 'pending': echo 'warning'; break; case 'processing': echo 'info'; break; case 'shipped': echo 'primary'; break; case 'delivered': echo 'success'; break; case 'cancelled': echo 'danger'; break; default: echo 'secondary'; } ?>"><?= htmlspecialchars(ucfirst($order['status'])) ?></span></td>
-                                    <td><?= htmlspecialchars($order['created_at']) ?></td>
-                                    <td><a href="view_order.php?id=<?= $order['id'] ?>" class="btn btn-sm btn-info">View</a></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr><td colspan="6" class="text-center">No orders found.</td></tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-			</div>
-			
-			<!-- Manage Content Tab -->
-			<div class="tab-pane fade" id="content" role="tabpanel" aria-labelledby="content-tab">
-				<h3 class="mt-3">Manage Content</h3>
-				<!-- Inline Content Management Form -->
-				<form method="POST" action="manage_content.php">
-					<div class="mb-3">
-						<label class="form-label">Content Title:</label>
-						<input type="text" name="title" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Content Body:</label>
-						<textarea name="body" class="form-control" required></textarea>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Status:</label>
-						<select name="status" class="form-select">
-							<option value="pending">Pending</option>
-							<option value="approved">Approved</option>
-							<option value="rejected">Rejected</option>
-						</select>
-					</div>
-					<button type="submit" class="btn btn-primary">Save Content</button>
-				</form>
-			</div>
-			
-			<!-- Messaging Tab -->
-			<div class="tab-pane fade" id="messaging" role="tabpanel" aria-labelledby="messaging-tab">
-				<h3 class="mt-3">Messaging</h3>
-				<!-- Inline Send Message Form -->
-				<form method="POST" action="send_message.php">
-					<div class="mb-3">
-						<label class="form-label">Receiver ID:</label>
-						<input type="number" name="receiver_id" class="form-control" required>
-					</div>
-					<div class="mb-3">
-						<label class="form-label">Message:</label>
-						<textarea name="content" class="form-control" required></textarea>
-					</div>
-					<button type="submit" class="btn btn-primary">Send Message</button>
-				</form>
-				<!-- Placeholder for listing messages -->
-				<p class="mt-3">Messages list goes here. (Use getMessages() from superadmin_functions.php)</p>
-			</div>
-			
-			<!-- Database Backup Tab -->
-			<div class="tab-pane fade" id="backup" role="tabpanel" aria-labelledby="backup-tab">
-				<h3 class="mt-3">Database Backup</h3>
-				<!-- Button to trigger backup function -->
-				<form method="POST" action="backup.php">
-					<button type="submit" class="btn btn-warning">Run Database Backup</button>
-				</form>
-				<!-- Optionally show backup result -->
-				<p class="mt-3">Latest backup file info goes here.</p>
-			</div>
-		</div>
-	</div>
-	
-	<!-- ...existing footer code if needed... -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">SuperAdmin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="../index.php">Boutique</a></li>
+        <li class="nav-item"><a class="nav-link" href="../admin/index.php">Admin</a></li>
+        <li class="nav-item"><a class="nav-link" href="../superadmin/messages.php">Messagerie</a></li>
+        <li class="nav-item"><a class="nav-link" href="../logout.php">Déconnexion</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <?php if($msg): ?>
+    <div class="alert alert-info"><?= htmlspecialchars($msg) ?></div>
+  <?php endif; ?>
+
+  <!-- Stat cards -->
+  <div class="row g-3">
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">Clients</div><div class="h4 mb-0"><?= $usersCount ?></div></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">Admins</div><div class="h4 mb-0"><?= $adminsCount ?></div></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">SuperAdmins</div><div class="h4 mb-0"><?= $superAdminsCount ?></div></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">Produits</div><div class="h4 mb-0"><?= $productsCount ?></div></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">Commandes</div><div class="h4 mb-0"><?= $ordersCount ?></div></div></div>
+    <div class="col-6 col-md-3"><div class="card p-3"><div class="text-muted">Messages</div><div class="h4 mb-0"><?= $messagesCount ?></div></div></div>
+  </div>
+
+  <!-- Onglets -->
+  <ul class="nav nav-tabs mt-4" id="superadminTab" role="tablist">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-users">Utilisateurs</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-admins">Admins</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-add">Ajouter</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-messages">Messagerie</button></li>
+  </ul>
+
+  <div class="tab-content bg-white p-3 rounded-bottom shadow-sm">
+    <!-- USERS -->
+    <div class="tab-pane fade show active" id="tab-users">
+      <?php $users = $pdo->query("SELECT id,username,email,created_at FROM users WHERE role='user' ORDER BY created_at DESC")->fetchAll(); ?>
+      <h5 class="mb-3">Liste des clients</h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Inscription</th><th></th></tr></thead>
+          <tbody>
+          <?php foreach($users as $u): ?>
+            <tr>
+              <td><?= (int)$u['id'] ?></td>
+              <td><?= htmlspecialchars($u['username']) ?></td>
+              <td><?= htmlspecialchars($u['email']) ?></td>
+              <td><?= htmlspecialchars($u['created_at'] ?? '') ?></td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-primary" href="messages.php?with_user_id=<?= (int)$u['id'] ?>">Contacter</a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ADMINS -->
+    <div class="tab-pane fade" id="tab-admins">
+      <?php $admins = $pdo->query("SELECT id,username,email,created_at FROM users WHERE role='admin' ORDER BY created_at DESC")->fetchAll(); ?>
+      <h5 class="mb-3">Liste des admins</h5>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead><tr><th>#</th><th>Username</th><th>Email</th><th>Inscription</th><th></th></tr></thead>
+          <tbody>
+          <?php foreach($admins as $a): ?>
+            <tr>
+              <td><?= (int)$a['id'] ?></td>
+              <td><?= htmlspecialchars($a['username']) ?></td>
+              <td><?= htmlspecialchars($a['email']) ?></td>
+              <td><?= htmlspecialchars($a['created_at'] ?? '') ?></td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-primary" href="messages.php?with_user_id=<?= (int)$a['id'] ?>">Contacter</a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ADD USER/ADMIN -->
+    <div class="tab-pane fade" id="tab-add">
+      <h5>Ajouter un utilisateur ou admin</h5>
+      <form method="post" class="row g-3 mt-2">
+        <input type="hidden" name="add_user" value="1">
+        <div class="col-md-6">
+          <label class="form-label">Nom d'utilisateur</label>
+          <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Mot de passe</label>
+          <input type="password" class="form-control" name="password" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Rôle</label>
+          <select class="form-select" name="role" required>
+            <option value="user">Utilisateur</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-success">Créer</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="tab-pane fade" id="tab-messages">
+      <h5>Messagerie</h5>
+      <a href="messages.php" class="btn btn-primary">Ouvrir le hub de messagerie</a>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <a href="manage_products.php" class="nav-link"><i class="fas fa-boxes me-2"></i>Manage Products</a>
                     <a href="add_category.php" class="nav-link"><i class="fas fa-tags me-2"></i>Add/Delete Categories</a>
                     <a href="users.php" class="nav-link"><i class="fas fa-users me-2"></i>Users</a>
-                    <a href="../chat.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
+                    <a href="../messages.php" class="nav-link"><i class="fas fa-comments me-2"></i>Chat</a>
                     <a href="../logout.php" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                 </nav>
             </div>
